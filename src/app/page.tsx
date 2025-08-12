@@ -134,9 +134,9 @@ export default function Home() {
             </Card>
             <Card title="Why Resonance?">
               <p>
-                Though new as an infrastructure provider, but we've been part of the Flare ecosystem for a long time.
-                We know Flare's protocols inside out and truly <strong>resonate</strong> with their design.
-                Our focus is durability, transparent methodology, and the network's long-term health over short-term wins.
+                Though new as an infrastructure provider, we have been part of the Flare ecosystem for a long time.
+                We know Flare’s protocols inside out and truly <strong>resonate</strong> with their design.
+                Our focus is durability, transparent methodology, and the network’s long-term health over short-term wins.
               </p>
             </Card>
             <Card title="What's next?">
@@ -172,7 +172,7 @@ export default function Home() {
                 We support all current{" "}
                 <strong>Flare Data Connector (FDC)</strong> attestations,
                 which are used for bridging data from external chains onto Flare.
-                Under the hood, we are running nodes on Bitcoin, Ethereum, XRP, DOGE,
+                Under the hood, we are running nodes and indexers on Bitcoin, Ethereum, XRP, DOGE,
                 and Songbird to facilitate these services.
               </p>
             </Card>
@@ -184,9 +184,9 @@ export default function Home() {
             <Card title="WFLR Delegations">
               <p>
                 Within the Flare network, wrapped <strong>WFLR</strong> tokens can
-                be used to support the network's enshrines protocolsto work through delegations.
-                This offers vote power to the network's data providers.
-                Delegations can be done in minutes via the&nbsp;
+                be used to support the network’s enshrined protocols through delegations.
+                As such, community members can entrust data providers with additional
+                vote power. Delegations can be done in minutes via the&nbsp;
                 <a
                   href="https://portal.flare.network/"
                   target="_blank"
@@ -211,7 +211,7 @@ export default function Home() {
               <p>
                 Flare is a delegated Proof-of-Stake chain: you can delegate stake on the
                 P-chain to an existing validator, without the need to run a validator node
-                yourself. As with vote power, more stake means more impact in validation and enshrined protocols.
+                yourself. As with vote power, more stake means more impact in validation and within the enshrined protocols.
                 <br />
                 <br />
                 <strong>Our validator ID</strong>
@@ -243,7 +243,7 @@ export default function Home() {
                 into the FTSO and FDC protocols, as well as various
                 data provider metrics, such as weights, uptime, success rates, or
                 even staking and delegation reward rates. It is thus the best
-                tool to check anything related to Flare's enshrined protocols.
+                tool to check anything related to Flare’s enshrined protocols.
                 <br /><br />
                 You can find our technical profile&nbsp;
                 <a
