@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const metadata = {
   title: "Disclaimer — Resonance",
   description: "Legal disclaimer for Resonance.",
@@ -16,12 +18,14 @@ export default function DisclaimerPage() {
           and Markets Act 2000 (FSMA) and is not directed at or intended for
           distribution to any person in the UK.
         </p>
-        <a
+
+        {/* use Link instead of <a href="/"> */}
+        <Link
           href="/"
           className="mt-8 inline-block underline decoration-white/40 hover:decoration-white"
         >
           ← Back to home
-        </a>
+        </Link>
       </section>
     </main>
   );
