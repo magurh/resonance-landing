@@ -42,6 +42,7 @@ const stats = [
   { label: "Uptime", value: ">99%" },
 ];
 
+
 const linkClasses =
   "font-semibold text-white/90 hover:text-white transition " +
   "focus-visible:underline focus-visible:decoration-white/60 underline-offset-4 " +
@@ -230,14 +231,16 @@ export default function Home() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight"
+                className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight
+                          bg-gradient-to-r from-fuchsia-300 via-violet-300 to-sky-300
+                          bg-clip-text text-transparent
+                          drop-shadow-[0_1px_10px_rgba(168,85,247,0.15)]"
               >
-                Signals that resonate.
+                Resonance
               </motion.h1>
-              <p className="mt-4 text-white/80 leading-relaxed">
-                Accurate, resilient data for Flare’s enshrined protocols. We harden core
-                systems, drive decentralization, and raise oracle accuracy alongside
-                other independent providers across the network.
+              <p className="mt-4 max-w-[60ch] text-white/80 leading-relaxed">
+                <span className="font-semibold text-white/90">Robust · Reliable · Accurate</span><br />
+                Driving decentralization and elevating the performance of Flare Network's enshrined protocols.
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <PrimaryButton href="https://portal.flare.network/">
@@ -252,11 +255,20 @@ export default function Home() {
               </div>
 
               {/* Stats */}
-              <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 items-stretch">
                 {stats.map((s) => (
-                  <div key={s.label} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                    <div className="text-xl font-bold">{s.value}</div>
-                    <div className="mt-1 text-xs text-white/70">{s.label}</div>
+                  <div
+                    key={s.label}
+                    className="rounded-2xl p-[2px] bg-gradient-to-r from-[#6e235c] to-[#18324f] h-full"
+                  >
+                    {/* opaque patch so the gradient never tints the inner glass */}
+                    <div className="rounded-2xl bg-neutral-950 h-full">
+                      {/* the actual tile — SAME look as your Fix 1 */}
+                      <div className="rounded-2xl bg-white/5 p-4 text-center backdrop-blur h-full">
+                        <div className="text-xl font-bold">{s.value}</div>
+                        <div className="mt-1 text-xs text-white/70">{s.label}</div>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
