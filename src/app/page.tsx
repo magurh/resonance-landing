@@ -240,7 +240,7 @@ export default function Home() {
               </motion.h1>
               <p className="mt-4 max-w-[60ch] text-white/80 leading-relaxed">
                 <span className="font-semibold text-white/90">Robust · Reliable · Accurate</span><br />
-                Driving decentralization and elevating the performance of Flare Network's enshrined protocols.
+                Driving decentralization and elevating the performance of Flare Network’s enshrined protocols.
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <PrimaryButton href="https://portal.flare.network/">
