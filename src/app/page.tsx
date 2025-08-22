@@ -214,13 +214,19 @@ export default function Home() {
                 yourself. As with vote power, more stake means more impact in validation and within the enshrined protocols.
                 <br />
                 <br />
-                <strong>Our validator ID</strong>
+                <strong>Our validator nodes</strong>
               </p>
               <p className="mt-3">
                 <code className="rounded bg-white/10 px-2 py-1 break-all">
                   NodeID-PSA7QAZ3s8cWwbuZ3qiCfodcRAa1DwHxA
                 </code>
                 <CopyButton text="NodeID-PSA7QAZ3s8cWwbuZ3qiCfodcRAa1DwHxA" />
+              </p>
+              <p className="mt-3">
+                <code className="rounded bg-white/10 px-2 py-1 break-all">
+                  NodeID-GZFJBtR95xYQf785nJwXK5dQ1MsEtbXEx
+                </code>
+                <CopyButton text="NodeID-GZFJBtR95xYQf785nJwXK5dQ1MsEtbXEx" />
               </p>
             </Card>
           </div>
@@ -265,12 +271,12 @@ export default function Home() {
                 <ul className="mt-3 list-disc pl-5 space-y-2">
                   <li>
                     <a
-                      href="https://www.flare.builders/validators"
+                      href="https://catenalytica.com/dashboard"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="underline decoration-white/40 hover:decoration-white"
                     >
-                      Flare Builders
+                      Catenalytica Platform
                     </a>
                   </li>
                   <li>
