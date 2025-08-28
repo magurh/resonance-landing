@@ -480,7 +480,7 @@ export default function Home() {
                   </li>
                 </ul>
                 <p className="mt-3">
-                  For an infrastructure provider, more <strong>vote power</strong> simply means a stronger impact on Flare's <strong>enshrined oracles</strong> and <strong>validation</strong>.
+                  For an infrastructure provider, more <strong>vote power</strong> simply means a stronger impact on Flare’s <strong>enshrined oracles</strong> and <strong>validation</strong>.
                   Your delegated tokens actively support the network’s core protocols.
                 </p>
               </GradientCard>
@@ -517,7 +517,7 @@ export default function Home() {
                   <strong>First-time delay:</strong> note that vote power for the next epoch is based on a
                   <strong> randomly chosen block</strong> from the current epoch. If that block predates your delegation,
                   your tokens won’t count until the following epoch. Thus, in unlucky situations, first rewards may
-                  take about <strong>~1 week</strong>. Make sure to follow our socials, as we will be posting regularly
+                  take about <strong>1 week</strong>. Make sure to follow our socials, as we will be posting regularly
                   when rewards can be claimed!
                 </p>
               </GradientCard>
