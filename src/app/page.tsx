@@ -14,20 +14,26 @@ import {
   Activity,
   ArrowRight,
   Twitter,
+  Clock,
+  Coins,
+  Wallet
 } from "lucide-react";
-
 // ────────────────────────────────────────────────────────────────────────────────
 // Types & data
 // ────────────────────────────────────────────────────────────────────────────────
 
-type TabKey = "overview" | "data" | "delegate" | "monitor";
+// Types
+type TabKey = "overview" | "data" | "delegate" | "monitor" | "tips";
 
+// Add to tabs array
 const tabs: { key: TabKey; label: string }[] = [
   { key: "overview", label: "Overview" },
   { key: "data", label: "Our Data" },
   { key: "delegate", label: "Delegate & Stake" },
   { key: "monitor", label: "Monitor" },
+  { key: "tips", label: "Tips" },
 ];
+
 
 // Quick stats
 const stats = [
@@ -458,6 +464,102 @@ export default function Home() {
               </GradientCard>
             </div>
           )}
+          {active === "tips" && (
+            <div className="mx-auto max-w-3xl space-y-6"> {/* centered & stacked */}
+              <GradientCard title="How are delegated tokens used?" icon={<Wallet className="h-5 w-5" />}>
+                <p>
+                  Flare supports two delegation types that grant <strong>vote power</strong> to infrastructure providers running
+                  Flare’s enshrined protocols:
+                </p>
+                <ul className="mt-3 list-disc pl-5 space-y-2">
+                  <li>
+                    <strong>Stake delegations (FLR)</strong> — native FLR staked on the P-chain.
+                  </li>
+                  <li>
+                    <strong>WFLR delegations (ERC-20)</strong> — wrapped FLR delegated on the EVM C-chain.
+                  </li>
+                </ul>
+                <p className="mt-3">
+                  For an infrastructure provider, more <strong>vote power</strong> simply means a stronger impact on Flare's <strong>enshrined oracles</strong> and <strong>validation</strong>.
+                  Your delegated tokens actively support the network’s core protocols.
+                </p>
+              </GradientCard>
+
+              <GradientCard title="How are my rewards calculated?" icon={<Coins className="h-5 w-5" />}>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>
+                    Rewards are computed every <strong>3.5 days</strong> (a <em>reward epoch</em>). These epochs always start
+                    on <strong>Monday mornings</strong> and <strong>Thursday evenings (UTC time)</strong>.
+                  </li>
+                  <li>
+                    After each epoch, rewards are calculated per provider and their delegators. Providers must meet a set of
+                    <strong> minimum performance requirements</strong> to be eligible.
+                  </li>
+                  <li>
+                    If eligible, rewards are then shared <strong>proportionally to your delegation</strong>, from the total rewards earned
+                    by the provider you have delegated to.
+                  </li>
+                </ul>
+              </GradientCard>
+
+              <GradientCard title="When will I receive my rewards?" icon={<Clock className="h-5 w-5" />}>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>
+                    <strong>WFLR delegations:</strong> rewards for these delegations are typically available
+                    for claiming approximately <strong>6–18 hours</strong> after epoch end.
+                  </li>
+                  <li>
+                    <strong>Stake delegations (FLR): these rewards are available </strong> every <strong>2 weeks</strong>,
+                    and bundle together 4 reward epochs.
+                  </li>
+                </ul>
+                <p className="mt-3 text-white/80">
+                  <strong>First-time delay:</strong> note that vote power for the next epoch is based on a
+                  <strong> randomly chosen block</strong> from the current epoch. If that block predates your delegation,
+                  your tokens won’t count until the following epoch. Thus, in unlucky situations, first rewards may
+                  take about <strong>~1 week</strong>. Make sure to follow our socials, as we will be posting regularly
+                  when rewards can be claimed!
+                </p>
+              </GradientCard>
+
+              <GradientCard title="How do I Delegate or Stake?" icon={<ExternalLink className="h-5 w-5" />}>
+                <p>
+                  The simplest path is via the{" "}
+                  <a
+                    href="https://portal.flare.network/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClasses}
+                  >
+                    <strong>Flare Portal</strong>
+                  </a>
+                  . Standard delegations use <strong>WFLR</strong>, while stake delegations use native <strong>FLR</strong>.
+                  Connect your wallet, then follow these steps:
+                </p>
+
+                <h4 className="mt-4 text-sm md:text-base font-semibold text-white">a) WFLR Delegations</h4>
+                <ol className="mt-2 list-decimal pl-5 space-y-2">
+                  <li>Open the <strong>Account</strong> tab.</li>
+                  <li>Wrap some <strong>FLR → WFLR</strong> (keep a little FLR for gas).</li>
+                  <li>Click <strong>Delegate</strong> and pick your provider (you can split across two).</li>
+                  <li>Confirm the transactions and wait for network confirmation.</li>
+                </ol>
+
+                <h4 className="mt-6 text-sm md:text-base font-semibold text-white">b) Stake Delegations (FLR)</h4>
+                <ol className="mt-2 list-decimal pl-5 space-y-2">
+                  <li>Open the <strong>Staking</strong> tab.</li>
+                  <li>
+                    Press <strong>Deposit</strong> to move FLR to the <strong>P-chain</strong> (staking chain) from the <strong>C-chain</strong> (EVM chain).
+                  </li>
+                  <li>
+                    Click <strong>Stake</strong>, set amount, add the validator <strong>NodeID</strong> you wish to delegate to, and choose a duration
+                    (minimum <strong>2 weeks</strong>).
+                  </li>
+                </ol>
+              </GradientCard>
+            </div>
+          )}
+
         </Container>
       </section>
 
