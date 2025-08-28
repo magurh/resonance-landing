@@ -1,10 +1,5 @@
 "use client";
 
-// Drop-in visual upgrade for your landing page.
-// Optional deps (recommended):
-//   npm i framer-motion lucide-react
-// Tailwind required (you already have it). No shadcn/ui needed.
-
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -34,7 +29,7 @@ const tabs: { key: TabKey; label: string }[] = [
   { key: "monitor", label: "Monitor" },
 ];
 
-// Quick stats to give the page visual rhythm
+// Quick stats
 const stats = [
   { label: "Since epoch", value: "315" },
   { label: "FTSO feeds", value: "60+" },
@@ -203,7 +198,6 @@ export default function Home() {
         <Container>
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center gap-3">
-              {/* If you have an SVG logo, swap this Image for it */}
               <div className="relative h-8 w-8 overflow-hidden rounded-xl ring-2 ring-white/80">
                 <Image src="/logo.jpeg" alt="Resonance logo" fill className="object-cover" />
               </div>
@@ -263,7 +257,6 @@ export default function Home() {
                   >
                     {/* opaque patch so the gradient never tints the inner glass */}
                     <div className="rounded-2xl bg-neutral-950 h-full">
-                      {/* the actual tile — SAME look as your Fix 1 */}
                       <div className="rounded-2xl bg-white/5 p-4 text-center backdrop-blur h-full">
                         <div className="text-xl font-bold">{s.value}</div>
                         <div className="mt-1 text-xs text-white/70">{s.label}</div>
