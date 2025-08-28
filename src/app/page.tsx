@@ -209,9 +209,18 @@ export default function Home() {
               </div>
               <span className="text-sm sm:text-base font-semibold tracking-tight">Resonance</span>
             </Link>
-            <div className="hidden md:block">
+            <div className="hidden md:flex items-center gap-2">
               <SegmentedTabs active={active} onChange={setActive} />
+              <Link
+                href="/learn"
+                className="rounded-xl px-4 md:px-6 py-2 text-sm font-semibold
+                          text-white/80 hover:text-white border border-white/20 bg-white/10
+                          transition focus-visible:outline-none"
+              >
+                Learn
+              </Link>
             </div>
+            
             <div className="flex items-center gap-3">
               <GhostButton href="https://x.com/resonanceoracle">
                 <Twitter className="h-4 w-4" />
@@ -249,6 +258,7 @@ export default function Home() {
                 <GhostButton href="https://flare-systems-explorer.flare.network/providers/fsp/0xEB5Bb53864d7E2e67E62a8671F816737Eec45cF4">
                   Explore <ExternalLink className="h-4 w-4" />
                 </GhostButton>
+                <GhostButton href="/learn">Learn</GhostButton>
                 <Pill>
                   <span className="h-2 w-2 rounded-full bg-emerald-400" /> Live
                 </Pill>
