@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -16,7 +16,8 @@ import {
   Twitter,
   Clock,
   Coins,
-  Wallet
+  Wallet,
+  Users
 } from "lucide-react";
 // ────────────────────────────────────────────────────────────────────────────────
 // Types & data
@@ -33,16 +34,6 @@ const tabs: { key: TabKey; label: string }[] = [
   { key: "monitor", label: "Monitor" },
   { key: "tips", label: "Tips" },
 ];
-
-
-// Quick stats
-const stats = [
-  { label: "Since epoch", value: "315" },
-  { label: "FTSO feeds", value: "60+" },
-  { label: "Networks supported", value: "6" },
-  { label: "Uptime", value: ">99%" },
-];
-
 
 const linkClasses =
   "font-semibold text-white/90 hover:text-white transition " +
@@ -189,11 +180,78 @@ function SegmentedTabs({ active, onChange }: { active: TabKey; onChange: (k: Tab
 }
 
 // ────────────────────────────────────────────────────────────────────────────────
+// Reward eligibility
+// ────────────────────────────────────────────────────────────────────────────────
+
+const ELIG_BASE = {
+  // Set this to the FIRST epoch boundary to count from:
+  timeUTC: "2025-08-01T12:00:00Z",
+  count: 0,
+};
+
+function getEligibilityInfo(now = new Date()) {
+  const TICK_MS = 84 * 60 * 60 * 1000; // 3.5 days
+  const base = new Date(ELIG_BASE.timeUTC);
+  let ticks = 0;
+  if (now > base) ticks = Math.floor((now.getTime() - base.getTime()) / TICK_MS);
+  const total = ELIG_BASE.count + ticks;
+  const nextTick = new Date(base.getTime() + (ticks + 1) * TICK_MS);
+  return { total, nextTick };
+}
+
+function fmtUTC(d: Date) {
+  return d.toLocaleString("en-GB", {
+    timeZone: "UTC",
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }) + " UTC";
+}
+
+
+// ────────────────────────────────────────────────────────────────────────────────
 // Page
 // ────────────────────────────────────────────────────────────────────────────────
 
 export default function Home() {
   const [active, setActive] = useState<TabKey>("overview");
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60_000); // tick every minute
+    return () => clearInterval(id);
+  }, []);
+  const { total: eligAllTime, nextTick } = useMemo(() => getEligibilityInfo(new Date(now)), [now]);
+    const stats = useMemo(
+    () => [
+      {
+        label: "Uptime",
+        value: ">99%",
+        sub: "",
+        icon: <ShieldCheck className="h-4 w-4 opacity-80" />,
+      },
+      {
+        label: "Total delegations",
+        value: "180M+",
+        sub: "WFLR 160M · FLR 20M",
+        icon: <Users className="h-4 w-4 opacity-80" />,
+      },
+      {
+        label: "Eligible Epochs",
+        value: String(eligAllTime),
+        sub: `Next check: ${fmtUTC(nextTick)}`,
+        icon: <Coins className="h-4 w-4 opacity-80" />,
+      },
+      {
+        label: "Eligibility Streak",
+        value: "100%",
+        sub: "",
+        icon: <Coins className="h-4 w-4 opacity-80" />,
+      },
+    ],
+    [eligAllTime, nextTick]
+  );
 
   return (
     <main className="min-h-screen bg-neutral-950 text-white antialiased">
@@ -255,6 +313,7 @@ export default function Home() {
               </div>
 
               {/* Stats */}
+              
               <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 items-stretch">
                 {stats.map((s) => (
                   <div
@@ -327,8 +386,11 @@ export default function Home() {
               </GradientCard>
               <GradientCard title="What’s next?" icon={<Activity className="h-5 w-5" />}>
                 <p>
-                  We’re fine‑tuning our pipelines and steadily lifting reward rates. The goal: a battle‑tested,
-                  boringly reliable infra provider you never have to think about.
+
+                  We started with a <strong>1M FLR</strong> self-bond, doubled it, and now targeting
+                  <strong> 3M</strong> to qualify for passes. Delegations just crossed <strong>180M+</strong>,
+                  reflecting growing community trust. Our goal: a battle-tested, boringly reliable
+                  provider you never have to think about.
                 </p>
               </GradientCard>
             </div>
