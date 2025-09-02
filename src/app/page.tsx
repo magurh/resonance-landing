@@ -4,6 +4,7 @@ import DelegationTrend from "@/components/DelegationTrend";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { SiX } from "react-icons/si";
 import { motion } from "framer-motion";
 import {
   Copy,
@@ -257,9 +258,9 @@ export default function Home() {
               <SegmentedTabs active={active} onChange={setActive} />
             </div>
             <div className="flex items-center gap-3">
-              <GhostButton href="https://x.com/resonanceoracle">
-                <Twitter className="h-4 w-4" />
-                <span className="hidden sm:inline">Follow</span>
+              <GhostButton href="https://x.com/resonanceoracle" aria-label="Follow on X">
+                <SiX className="h-4 w-4" />
+                <span className="hidden sm:inline">Tune in</span>
               </GhostButton>
             </div>
           </div>
@@ -334,7 +335,7 @@ export default function Home() {
               >
                 <DelegationTrend
                   variant="bare"                           // no card frame; uses hero background
-                  title="Total Delegations"
+                  title="Community Delegations"
                   height={260}
                   maxWidthClass="max-w-md md:max-w-lg"     // keeps width elegant
                   loopAnimationInterval={30_000}           // re-animate line every 30s
