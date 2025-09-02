@@ -1,5 +1,6 @@
 "use client";
 
+import DelegationTrend from "@/components/DelegationTrend";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -199,17 +200,6 @@ function getEligibilityInfo(now = new Date()) {
   return { total, nextTick };
 }
 
-function fmtUTC(d: Date) {
-  return d.toLocaleString("en-GB", {
-    timeZone: "UTC",
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }) + " UTC";
-}
-
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Page
@@ -228,25 +218,21 @@ export default function Home() {
       {
         label: "Uptime",
         value: ">99%",
-        sub: "",
         icon: <ShieldCheck className="h-4 w-4 opacity-80" />,
       },
       {
-        label: "Total delegations",
-        value: "180M+",
-        sub: "WFLR 160M · FLR 20M",
+        label: "Delegations",
+        value: "150M+",
         icon: <Users className="h-4 w-4 opacity-80" />,
       },
       {
         label: "Eligible Epochs",
         value: String(eligAllTime),
-        sub: `Next check: ${fmtUTC(nextTick)}`,
         icon: <Coins className="h-4 w-4 opacity-80" />,
       },
       {
         label: "Eligibility Streak",
         value: "100%",
-        sub: "",
         icon: <Coins className="h-4 w-4 opacity-80" />,
       },
     ],
@@ -280,11 +266,13 @@ export default function Home() {
         </Container>
       </header>
 
-      {/* Hero */}
+        {/* Hero */}
       <section className="border-b border-white/10">
         <Container>
-          <div className="grid gap-8 py-14 md:grid-cols-2 md:py-18">
-            <div>
+          {/* On md+ we want bottom alignment; on mobile it just stacks */}
+          <div className="grid items-end gap-8 py-14 md:grid-cols-2 md:py-18">
+            {/* LEFT column — title, copy, CTAs, stats */}
+            <div className="order-1 md:order-none">
               <motion.h1
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -296,14 +284,14 @@ export default function Home() {
               >
                 Resonance
               </motion.h1>
+
               <p className="mt-4 max-w-[60ch] text-white/80 leading-relaxed">
                 <span className="font-semibold text-white/90">Robust · Reliable · Accurate</span><br />
                 Driving decentralization and elevating the performance of Flare Network’s enshrined protocols.
               </p>
+
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <PrimaryButton href="https://portal.flare.network/">
-                  Flare Portal
-                </PrimaryButton>
+                <PrimaryButton href="https://portal.flare.network/">Flare Portal</PrimaryButton>
                 <GhostButton href="https://flare-systems-explorer.flare.network/providers/fsp/0xEB5Bb53864d7E2e67E62a8671F816737Eec45cF4">
                   Explore <ExternalLink className="h-4 w-4" />
                 </GhostButton>
@@ -313,16 +301,15 @@ export default function Home() {
               </div>
 
               {/* Stats */}
-              
               <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4 items-stretch">
                 {stats.map((s) => (
                   <div
                     key={s.label}
                     className="rounded-2xl p-[2px] bg-gradient-to-r from-[#6e235c] to-[#18324f] h-full"
                   >
-                    {/* opaque patch so the gradient never tints the inner glass */}
                     <div className="rounded-2xl bg-neutral-950 h-full">
-                      <div className="rounded-2xl bg-white/5 p-4 text-center backdrop-blur h-full">
+                      <div className="rounded-2xl bg-white/5 p-4 text-center backdrop-blur h-full flex flex-col justify-center">
+                        {s.icon && <div className="mb-1 flex justify-center">{s.icon}</div>}
                         <div className="text-xl font-bold">{s.value}</div>
                         <div className="mt-1 text-xs text-white/70">{s.label}</div>
                       </div>
@@ -332,33 +319,31 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="relative">
-              {/* Decorative orb */}
-              <div className="absolute -top-10 -right-8 h-56 w-56 rounded-full bg-gradient-to-tr from-fuchsia-500/40 to-cyan-400/40 blur-3xl" />
-              <div className="relative rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-                <div className="grid gap-4">
-                  <div className="flex items-center gap-3">
-                    <SignalHigh className="h-5 w-5 opacity-80" />
-                    <span className="text-sm font-medium">FTSO Provider</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Database className="h-5 w-5 opacity-80" />
-                    <span className="text-sm font-medium">FDC Attestations</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <ShieldCheck className="h-5 w-5 opacity-80" />
-                    <span className="text-sm font-medium">Flare Validator</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Activity className="h-5 w-5 opacity-80" />
-                    <span className="text-sm font-medium">Monitoring & reliability</span>
-                  </div>
-                </div>
+            {/* RIGHT column — chart (bare), aligned to hero bottom on md+ */}
+            <div className="relative order-2 md:order-none self-end">
+              {/* A touch of spacing so it visually starts below the H1 on mobile */}
+              <div
+                className="
+                  relative mt-4 md:mt-0
+                  before:content-[''] before:absolute
+                  before:-top-6 before:-right-4
+                  before:h-48 before:w-48 before:rounded-full
+                  before:opacity-80 before:blur-2xl
+                  before:[background:radial-gradient(closest-side,rgba(168,85,247,0.35),rgba(34,211,238,0.20)_60%,transparent_72%)]
+                "
+              >
+                <DelegationTrend
+                  variant="bare"                           // no card frame; uses hero background
+                  title="Total Delegations"
+                  height={260}
+                  maxWidthClass="max-w-md md:max-w-lg"     // keeps width elegant
+                  loopAnimationInterval={30_000}           // re-animate line every 30s
+                />
               </div>
             </div>
           </div>
 
-          {/* Tabs for small screens (fallback) */}
+          {/* Tabs for small screens (keep as before) */}
           <div className="mt-4 md:hidden">
             <SegmentedTabs active={active} onChange={setActive} />
           </div>
@@ -388,7 +373,7 @@ export default function Home() {
                 <p>
 
                   We started with a <strong>1M FLR</strong> self-bond, doubled it, and now targeting
-                  <strong> 3M</strong> to qualify for passes. Delegations just crossed <strong>180M+</strong>,
+                  <strong> 3M</strong> to qualify for passes. Delegations just crossed <strong>150M+</strong>,
                   reflecting growing community trust. Our goal: a battle-tested, boringly reliable
                   provider you never have to think about.
                 </p>
@@ -650,7 +635,7 @@ export default function Home() {
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-white">Twitter</h4>
+              <h4 className="font-semibold text-white">X</h4>
               <p className="mt-2">
                 <a
                   href="https://x.com/resonanceoracle"
@@ -669,3 +654,4 @@ export default function Home() {
     </main>
   );
 }
+
