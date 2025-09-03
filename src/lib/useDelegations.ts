@@ -1,7 +1,7 @@
 // src/lib/useDelegations.ts
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export type DelegationPoint = {
   epoch: number;
@@ -145,14 +145,14 @@ export function useDelegationsCSV(csvUrl: string, opts?: Options) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const fetchCSV = async (signal?: AbortSignal) => {
+  const fetchCSV = useCallback(async (signal?: AbortSignal) => {
     try {
       setLoading(true);
       setError(null);
 
       // cache-bust so Google doesn't serve stale CSV
       const bust = csvUrl + (csvUrl.includes("?") ? "&" : "?") + "t=" + Date.now();
-      const res = await fetch(bust, { cache: "no-store", mode: "cors", signal });
+      const res = await fetch(bust, { cache: "no-store", signal });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const text = await res.text();
       const parsed = parseCSVtoSeries(text);
@@ -162,13 +162,13 @@ export function useDelegationsCSV(csvUrl: string, opts?: Options) {
       }
 
       setSeries(parsed);
-    } catch (e: any) {
-      if (e?.name === "AbortError") return;
-      setError(e?.message || "Failed to fetch delegations.");
+    } catch (e: unknown) {
+     if (e instanceof DOMException && e.name === "AbortError") return;
+     setError(e instanceof Error ? e.message : "Failed to fetch delegations.");
     } finally {
       setLoading(false);
     }
-  };
+  }, [csvUrl]);
 
   const refresh = () => fetchCSV();
 
@@ -208,7 +208,7 @@ export function useDelegationsCSV(csvUrl: string, opts?: Options) {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [csvUrl, opts?.refreshHourUTC, opts?.refreshMinuteUTC, opts?.refreshEveryMs]);
+  }, [fetchCSV, opts?.refreshHourUTC, opts?.refreshMinuteUTC, opts?.refreshEveryMs]);
 
   const latest = useMemo(() => (series?.length ? series[series.length - 1] : null), [series]);
 

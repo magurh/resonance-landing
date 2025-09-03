@@ -216,7 +216,7 @@ export default function Home() {
     const id = setInterval(() => setNow(Date.now()), 60_000); // tick every minute
     return () => clearInterval(id);
   }, []);
-  const { total: eligAllTime, nextTick } = useMemo(() => getEligibilityInfo(new Date(now)), [now]);
+  const { total: eligAllTime } = useMemo(() => getEligibilityInfo(new Date(now)), [now]);
     const stats = useMemo(
     () => [
       {
@@ -240,10 +240,10 @@ export default function Home() {
         icon: <Coins className="h-4 w-4 opacity-80" />,
       },
     ],
-    [eligAllTime, nextTick]
+    [eligAllTime]
   );
   // grab data from public csv
-  const { series: liveSeries, latest, loading, error } =
+  const { series: liveSeries} =
     useDelegationsCSV(DELEGATIONS_CSV, { refreshHourUTC: 12, refreshMinuteUTC: 0 });
 
   return (

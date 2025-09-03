@@ -30,13 +30,31 @@ const raw = [
 const fmtCompactInt = (v: number) =>
   new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 0 }).format(Math.round(v));
 
-function CustomTooltip({ active, payload, label }: any) {
-  if (!active || !payload?.length) return null;
-  const v = payload[0].value as number;
+type MinimalTooltipPayload = { value?: number | string | Array<number | string> };
+type MinimalTooltipProps = {
+  active?: boolean;
+  label?: string | number;
+  payload?: MinimalTooltipPayload[];
+};
+
+function CustomTooltip({ active, payload, label }: MinimalTooltipProps) {
+  if (!active || !payload || payload.length === 0) return null;
+
+  const raw = payload[0]?.value;
+  const val =
+    typeof raw === "number"
+      ? raw
+      : Number(Array.isArray(raw) ? raw[0] ?? 0 : raw ?? 0);
+
   return (
     <div className="rounded-xl border border-white/10 bg-neutral-900/90 px-3 py-2 text-xs shadow-lg backdrop-blur">
-      <div className="text-white/70">Epoch {label}</div>
-      <div className="font-semibold text-white">{fmtCompactInt(v)}</div>
+      <div className="text-white/70">Epoch {String(label)}</div>
+      <div className="font-semibold text-white">
+        {new Intl.NumberFormat("en-US", {
+          notation: "compact",
+          maximumFractionDigits: 0,
+        }).format(val)}
+      </div>
     </div>
   );
 }
@@ -44,7 +62,7 @@ function CustomTooltip({ active, payload, label }: any) {
 type Point = { epoch: number; total: number };
 
 export default function DelegationTrend({
-  title = "Total Delegations",
+  title = "Community Delegations",
   height = 260,
   maxWidthClass = "max-w-3xl",
   variant = "card", // "card" | "bare"
@@ -94,7 +112,12 @@ export default function DelegationTrend({
     <>
       {/* centered title */}
       <div className="mb-3">
-        <h3 className="text-lg sm:text-xl md:text-xl font-semibold tracking-tight text-white/90 text-center">
+        <h3
+          className="text-xl sm:text-xl font-semibold tracking-tight text-center
+                    bg-gradient-to-r from-fuchsia-300 via-violet-300 to-sky-300
+                    bg-clip-text text-transparent
+                    drop-shadow-[0_1px_8px_rgba(168,85,247,0.18)]"
+        >
           {title}
         </h3>
       </div>
@@ -120,8 +143,15 @@ export default function DelegationTrend({
               dataKey="epoch"
               interval="preserveStartEnd"
               tick={{ fill: "rgba(255,255,255,0.8)", fontSize: 12, fontWeight: 700 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.3)" }}
-              tickLine={{ stroke: "rgba(255,255,255,0.3)" }}
+              axisLine={{
+                stroke: "rgba(255,255,255,0.55)",
+                strokeWidth: 1.5,
+                strokeLinecap: "round",
+              }}
+              tickLine={{
+                stroke: "rgba(255,255,255,0.40)",
+                strokeWidth: 1.25,
+              }}
             >
               <Label
                 value="Reward Epoch"
@@ -135,8 +165,15 @@ export default function DelegationTrend({
               allowDecimals={false}
               tickFormatter={fmtCompactInt}
               tick={{ fill: "rgba(255,255,255,0.8)", fontSize: 12, fontWeight: 700 }}
-              axisLine={{ stroke: "rgba(255,255,255,0.3)" }}
-              tickLine={{ stroke: "rgba(255,255,255,0.3)" }}
+              axisLine={{ 
+                stroke: "rgba(255,255,255,0.55)",
+                strokeWidth: 1.5,
+                strokeLinecap: "round",
+              }}
+              tickLine={{
+                stroke: "rgba(255,255,255,0.40)",
+                strokeWidth: 1.25,
+              }}
               width={64}
             >
             </YAxis>
