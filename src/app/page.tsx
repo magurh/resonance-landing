@@ -1,6 +1,7 @@
 "use client";
 
 import DelegationTrend from "@/components/DelegationTrend";
+import { useDelegationsCSV } from "@/lib/useDelegations";
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,7 +16,6 @@ import {
   ShieldCheck,
   Activity,
   ArrowRight,
-  Twitter,
   Clock,
   Coins,
   Wallet,
@@ -41,6 +41,9 @@ const linkClasses =
   "font-semibold text-white/90 hover:text-white transition " +
   "focus-visible:underline focus-visible:decoration-white/60 underline-offset-4 " +
   "focus-visible:outline-none rounded";
+
+const DELEGATIONS_CSV =
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRbR6hIfC_P2sVAEvWXGA_myLV6iH42omqRPvvaB1USwpqGV_dRylyPyDBPedJ8n8kNNMObZadAKK80/pub?gid=0&single=true&output=csv";
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Utility components
@@ -239,6 +242,9 @@ export default function Home() {
     ],
     [eligAllTime, nextTick]
   );
+  // grab data from public csv
+  const { series: liveSeries, latest, loading, error } =
+    useDelegationsCSV(DELEGATIONS_CSV, { refreshHourUTC: 12, refreshMinuteUTC: 0 });
 
   return (
     <main className="min-h-screen bg-neutral-950 text-white antialiased">
@@ -322,7 +328,7 @@ export default function Home() {
 
             {/* RIGHT column — chart (bare), aligned to hero bottom on md+ */}
             <div className="relative order-2 md:order-none self-end">
-              {/* A touch of spacing so it visually starts below the H1 on mobile */}
+              {/* Spacing so it visually starts below the H1 on mobile */}
               <div
                 className="
                   relative mt-4 md:mt-0
@@ -337,14 +343,15 @@ export default function Home() {
                   variant="bare"                           // no card frame; uses hero background
                   title="Community Delegations"
                   height={260}
-                  maxWidthClass="max-w-md md:max-w-lg"     // keeps width elegant
+                  maxWidthClass="max-w-md md:max-w-lg"
                   loopAnimationInterval={30_000}           // re-animate line every 30s
+                  dataOverride={liveSeries || undefined}
                 />
               </div>
             </div>
           </div>
 
-          {/* Tabs for small screens (keep as before) */}
+          {/* Tabs for small screens */}
           <div className="mt-4 md:hidden">
             <SegmentedTabs active={active} onChange={setActive} />
           </div>

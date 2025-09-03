@@ -41,6 +41,7 @@ function CustomTooltip({ active, payload, label }: any) {
   );
 }
 
+type Point = { epoch: number; total: number };
 
 export default function DelegationTrend({
   title = "Total Delegations",
@@ -48,14 +49,36 @@ export default function DelegationTrend({
   maxWidthClass = "max-w-3xl",
   variant = "card", // "card" | "bare"
   loopAnimationInterval = 0,
+  dataOverride,
 }: {
   title?: string;
   height?: number;
   maxWidthClass?: string;
   variant?: "card" | "bare";
   loopAnimationInterval?: number;
+  dataOverride?: Point[];
 }) {
-  const data = useMemo(() => raw, []);
+    const data = useMemo<Point[]>(
+    () => (dataOverride?.length ? dataOverride : raw /* or RAW */),
+    [dataOverride]
+  );
+
+  const xTicks = useMemo(() => {
+    const epochs = Array.from(new Set(data.map(d => d.epoch))).sort((a, b) => a - b);
+    const len = epochs.length;
+    if (len <= 1) return epochs;
+
+    const desired = (len % 2 === 0) ? 4 : 5;    // even → 4, odd → 5
+    const N = Math.min(desired, len);           // don’t exceed available points
+
+    const ticks: number[] = [];
+    for (let i = 0; i < N; i++) {
+      const idx = Math.round((i * (len - 1)) / (N - 1)); // 0 .. last
+      ticks.push(epochs[idx]);
+    }
+    return Array.from(new Set(ticks)); // guard against rounding duplicates
+  }, [data]);
+
 
   // — re-animate by remounting the chart —
   const [lineKey, setLineKey] = useState(0);
@@ -93,6 +116,7 @@ export default function DelegationTrend({
             <CartesianGrid stroke="rgba(255,255,255,0.12)" vertical={false} />
 
             <XAxis
+              ticks={xTicks}
               dataKey="epoch"
               interval="preserveStartEnd"
               tick={{ fill: "rgba(255,255,255,0.8)", fontSize: 12, fontWeight: 700 }}
