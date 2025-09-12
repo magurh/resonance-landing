@@ -13,7 +13,7 @@ import {
   Label,
 } from "recharts";
 
-/** Minimal tooltip typing (no `any`, no fragile Recharts internals) */
+/** Minimal tooltip typing to keep TS happy without depending on Recharts' internal types */
 type MinimalTooltipPayload = { value?: number | string | Array<number | string> };
 type MinimalTooltipProps = {
   active?: boolean;
@@ -36,8 +36,8 @@ function CustomTooltip({ active, payload, label }: MinimalTooltipProps) {
   );
 }
 
-// static fallback; your live data will override via props
-const raw = [
+// Fallback data; live CSV will override via `dataOverride`
+const FALLBACK: Point[] = [
   { epoch: 316, total: 1126000 },
   { epoch: 317, total: 1126000 },
   { epoch: 318, total: 12395668.337 },
@@ -50,14 +50,17 @@ const raw = [
   { epoch: 325, total: 173353343.921 },
 ];
 
-type Point = { epoch: number; total: number };
+export type Point = { epoch: number; total: number };
 
 type Props = {
   title?: string;
   height?: number;
   maxWidthClass?: string;
+  /** "card" adds the framed card background; "bare" lets it blend into the hero */
   variant?: "card" | "bare";
+  /** Replays the draw animation every N ms; 0 disables the loop */
   loopAnimationInterval?: number;
+  /** If provided, replaces fallback with live CSV series */
   dataOverride?: Point[];
 };
 
@@ -69,34 +72,37 @@ function DelegationTrendImpl({
   loopAnimationInterval = 0,
   dataOverride,
 }: Props) {
-  // keep data reference stable; tab switches won’t change it
+  // Use live data when present; otherwise fallback
   const data = useMemo<Point[]>(
-    () => (dataOverride?.length ? dataOverride : raw),
+    () => (dataOverride?.length ? dataOverride : FALLBACK),
     [dataOverride]
   );
 
-  // pick 4 or 5 evenly spaced ticks
+  // X ticks: even → 4, odd → 5, spaced across the domain (caps clutter)
   const xTicks = useMemo(() => {
-    const epochs = Array.from(new Set(data.map(d => d.epoch))).sort((a, b) => a - b);
+    const epochs = Array.from(new Set(data.map((d) => d.epoch))).sort((a, b) => a - b);
     const len = epochs.length;
     if (len <= 1) return epochs;
     const desired = len % 2 === 0 ? 4 : 5;
     const N = Math.min(desired, len);
     const ticks: number[] = [];
-    for (let i = 0; i < N; i++) ticks.push(epochs[Math.round((i * (len - 1)) / (N - 1))]);
+    for (let i = 0; i < N; i++) {
+      ticks.push(epochs[Math.round((i * (len - 1)) / (N - 1))]);
+    }
     return Array.from(new Set(ticks));
   }, [data]);
 
-  // re-animate ONLY on the loop; tab switches won’t touch this
+  // Timed replay: remount only the <Line/> so it draws again; doesn’t affect axes/grid
   const [lineKey, setLineKey] = useState(0);
   useEffect(() => {
     if (!loopAnimationInterval) return;
-    const id = setInterval(() => setLineKey(k => k + 1), loopAnimationInterval);
-    return () => clearInterval(id);
+    const id = window.setInterval(() => setLineKey((k) => k + 1), loopAnimationInterval);
+    return () => window.clearInterval(id);
   }, [loopAnimationInterval]);
 
   const ChartBody = (
     <>
+      {/* Title */}
       <div className="mb-3">
         <h3
           className="text-xl sm:text-xl font-semibold tracking-tight text-center
@@ -108,6 +114,7 @@ function DelegationTrendImpl({
         </h3>
       </div>
 
+      {/* Chart */}
       <div className="h-[220px] sm:h-[240px]" style={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 12, right: 16, left: 16, bottom: 14 }}>
@@ -125,9 +132,9 @@ function DelegationTrendImpl({
             <CartesianGrid stroke="rgba(255,255,255,0.12)" vertical={false} />
 
             <XAxis
-              ticks={xTicks}
               dataKey="epoch"
-              interval={0} /* respect our ticks exactly */
+              ticks={xTicks}
+              interval={0}
               tick={{ fill: "rgba(255,255,255,0.8)", fontSize: 12, fontWeight: 700 }}
               axisLine={{ stroke: "rgba(255,255,255,0.55)", strokeWidth: 1.5, strokeLinecap: "round" }}
               tickLine={{ stroke: "rgba(255,255,255,0.40)", strokeWidth: 1.25 }}
@@ -151,7 +158,7 @@ function DelegationTrendImpl({
 
             <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(255,255,255,0.25)" }} />
 
-            {/* Animate only on mount; suppress re-animations on updates/resizes */}
+            {/* Smooth on updates (CSV arrival), replay every N ms via key remount */}
             <Line
               key={lineKey}
               type="monotone"
@@ -161,8 +168,7 @@ function DelegationTrendImpl({
               dot={false}
               activeDot={{ r: 4 }}
               fill="url(#fillBrand)"
-              isAnimationActive
-              isUpdateAnimationActive={false}   // <- stops animation on state/layout updates
+              isAnimationActive={true}
               animationDuration={1200}
               animationEasing="ease-in-out"
             />
@@ -173,13 +179,15 @@ function DelegationTrendImpl({
   );
 
   if (variant === "bare") {
+    // No card frame; blends into hero background
     return <div className={`mx-auto ${maxWidthClass}`}>{ChartBody}</div>;
   }
 
+  // Card-framed variant
   return (
     <div className={`mx-auto ${maxWidthClass} relative rounded-2xl p-[1px] bg-gradient-to-b from-white/25 to-white/5`}>
       <div className="relative rounded-2xl border border-white/10 bg-white/5 p-4 sm:p-5 backdrop-blur">
-        {/* subtle background accents */}
+        {/* Soft background accents */}
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden rounded-2xl">
           <div className="absolute inset-0 opacity-50 blur-3xl">
             <div className="absolute -top-1/2 -left-1/3 h-[160%] w-[160%]
@@ -199,7 +207,7 @@ function DelegationTrendImpl({
   );
 }
 
-/** Prevent tab switches from re-rendering the chart unless props actually change */
+/** Prevent re-renders on tab switches etc., but still update when `dataOverride` identity changes */
 function propsEqual(prev: Props, next: Props) {
   return (
     prev.title === next.title &&
@@ -207,7 +215,7 @@ function propsEqual(prev: Props, next: Props) {
     prev.maxWidthClass === next.maxWidthClass &&
     prev.variant === next.variant &&
     prev.loopAnimationInterval === next.loopAnimationInterval &&
-    prev.dataOverride === next.dataOverride // ref compare; changes only when you fetch new CSV
+    prev.dataOverride === next.dataOverride
   );
 }
 
