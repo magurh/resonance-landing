@@ -365,23 +365,23 @@ export default function Home() {
             <div className="grid gap-6 md:grid-cols-3">
               <GradientCard title="Who are we?" icon={<SignalHigh className="h-5 w-5" />}>
                 <p>
-                  Resonance is a new data provider on Flare, registered since <strong>reward epoch 315</strong>.
+                  Resonance is already an established data provider on Flare, registered since <strong>reward epoch 315</strong>.
                   Our mission is to harden core protocols, drive decentralization, and raise oracle accuracy—
                   side by side with a growing network of independent providers.
                 </p>
               </GradientCard>
               <GradientCard title="Why Resonance?" icon={<ShieldCheck className="h-5 w-5" />}>
                 <p>
-                  Though new as an infrastructure provider, we’ve been part of the Flare ecosystem for a long time.
-                  We know Flare’s protocols inside out and truly <strong>resonate</strong> with their design. Our focus is durability,
+                  We’ve been part of the Flare ecosystem for a long time and
+                  we know Flare’s protocols inside out, and truly <strong>resonate</strong> with their design. Our focus is durability,
                   transparent methodology, and the network’s long‑term health over short‑term wins.
                 </p>
               </GradientCard>
               <GradientCard title="What’s next?" icon={<Activity className="h-5 w-5" />}>
                 <p>
 
-                  We started with a <strong>1M FLR</strong> self-bond, doubled it, and now targeting
-                  <strong> 3M</strong> to qualify for passes. Delegations just crossed <strong>150M+</strong>,
+                  We started with a <strong>1M FLR</strong> self-bond, and now sitting at around
+                  <strong> 3M</strong> stake. Our delegations crossed <strong>200M</strong>,
                   reflecting growing community trust. Our goal: a battle-tested, boringly reliable
                   provider you never have to think about.
                 </p>
@@ -406,7 +406,7 @@ export default function Home() {
               <GradientCard title="FDC" icon={<Database className="h-5 w-5" />}>
                 <p>
                   We support all current <strong>Flare Data Connector (FDC)</strong> attestations used for bridging external chain data.
-                  We run nodes and indexers on Bitcoin, Ethereum, XRP, DOGE, as well as Flare and Songbird to facilitate these services.
+                  We run nodes and indexers on Bitcoin, Ethereum, XRP, DOGE, as well as Flare, and Songbird to facilitate these services.
                 </p>
               </GradientCard>
             </div>
@@ -446,8 +446,8 @@ export default function Home() {
                   <h4 className="text-sm md:text-base font-semibold text-white mb-2">
                     Our validator nodes
                   </h4>
-                  <CopyField text="NodeID-PSA7QAZ3s8cWwbuZ3qiCfodcRAa1DwHxA" />{"  "}
-                  <CopyField text="NodeID-GZFJBtR95xYQf785nJwXK5dQ1MsEtbXEx" />
+                  <CopyField text="NodeID-GZFJBtR95xYQf785nJwXK5dQ1MsEtbXEx" />{"  "}
+                  <CopyField text="NodeID-PSA7QAZ3s8cWwbuZ3qiCfodcRAa1DwHxA" />
                 </div>
               </GradientCard>
             </div>
