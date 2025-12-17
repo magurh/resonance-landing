@@ -226,7 +226,7 @@ export default function Home() {
       },
       {
         label: "Delegations",
-        value: "150M+",
+        value: "200M+",
         icon: <Users className="h-4 w-4 opacity-80" />,
       },
       {
